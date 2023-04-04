@@ -16,7 +16,6 @@ students = []
 
 def print_each(names)
   
-  print_header
   names.each_with_index do |student, student_no|
     puts "#{student_no + 1}. #{student[:name]} (Cohort: #{student[:cohort]}, Hobby: #{student[:hobby]})"
   end
@@ -135,23 +134,31 @@ def input_students
   return students
 end
 
-#students = input_students
-#print_header
-#print_each(students)
-#puts ""
+def interactive_menu
+  students = []
+  
+  loop do
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "9. Exit"
+    
+    selection = gets.chomp
+    
+    case selection
+    when "1"
+      students = input_students
+    when "2"
+      print_header
+      print_each(students)
+      print_footer(students)
+    when "9"
+      exit
+    else
+      puts "I don't know what you meant, try again"
+    end
+    
+  end
+  
+end
 
-#Test code below
-=begin
-print_starting_with("D", students)
-puts ""
-print_shorter_than(12, students)
-puts ""
-print_all_by_cohort(students)
-puts ""
-print_by_cohort("november", students)
-puts ""
-=end
-
-
-
-print_footer(students)
+interactive_menu
