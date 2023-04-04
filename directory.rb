@@ -1,7 +1,21 @@
+require 'csv'
+
 @students = []
 
+def default_load
+  
+  puts "Would you like to load the default list of students? (y/n)"
+  input = STDIN.gets.chomp
+  if input == "y"
+    CSV.foreach('students.csv') do |line|
+      name, cohort = line
+      @students << {name: name, cohort: cohort.to_sym}
+    end
+  end
+  
+end
+
 def input_students
-  name = "Jane Doe"
   
   while true do
     puts "Please enter the name of the student you'd like to add."
@@ -38,12 +52,17 @@ end
 
 def load_students(filename = "students.csv")
   
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym}
+  puts "Please choose a file to load from"
+  filename = STDIN.gets.chomp
+  
+  if !File.exists?(filename)
+    puts "Sorry, #{filename} doesn't exist"
+  else
+    CSV.foreach(filename) do |line|
+      name, cohort = line
+      @students << {name: name, cohort: cohort.to_sym}
+    end
   end
-  file.close
   
 end
 
@@ -95,8 +114,8 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list of students"
+  puts "4. Load the list of students"
   puts "9. Exit"
 end
 
@@ -135,6 +154,8 @@ def print_students_list
 end
 
 def process(selection)
+  puts "You've chosen option #{selection}."
+  
   case selection
     when "1"
       input_students
@@ -152,18 +173,17 @@ def process(selection)
 end
 
 def save_students
-  # open file for writing
-  file = File.open("students.csv", "w")
   
-  #iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  puts "Please choose a file to save to"
+  filename = STDIN.gets.chomp
+  
+  CSV.open(filename, "wb") do |csv|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv << student_data
+    end
   end
   
-  # close the file
-  file.close
 end
 
 def show_students
@@ -172,19 +192,6 @@ def show_students
   print_footer
 end
 
-def try_load_students
-  filename = ARGV.first
-  return if filename.nil?
-  
-  if File.exists?(filename)
-    load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}"
-  else
-    puts "Sorry, #{filename} doesn't exist"
-    exit
-  end
-end
-
 # Run code
-try_load_students
+default_load
 interactive_menu
