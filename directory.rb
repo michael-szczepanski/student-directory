@@ -6,17 +6,17 @@ def input_students
   while true do
     puts "Please enter the name of the student you'd like to add."
     puts "Type finished once you're done"
-    name = gets.chomp
+    name = STDIN.gets.chomp
     cohort = ""
     
     break if name.downcase == "finished"
     
     puts "Please enter the cohort you'd like to enroll this student in"
-    cohort = gets.chomp
+    cohort = STDIN.gets.chomp
     
     puts "Name: #{name}, Cohort: #{cohort}"
     puts "If you'd like to add this student to the list, type 'yes'"
-    answer = gets.chomp
+    answer = STDIN.gets.chomp
     if answer.downcase == "yes"
       student = Hash.new('not specified')
       student[:name] = name
@@ -30,15 +30,15 @@ end
 def interactive_menu
   loop do
     print_menu
-    selection = gets.chomp
+    selection = STDIN.gets.chomp
     process(selection)
   end
   
 end
 
-def load_students
+def load_students(filename = "students.csv")
   
-  file = File.open("students.csv", "r")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     @students << {name: name, cohort: cohort.to_sym}
@@ -172,5 +172,19 @@ def show_students
   print_footer
 end
 
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist"
+    exit
+  end
+end
+
 # Run code
+try_load_students
 interactive_menu
