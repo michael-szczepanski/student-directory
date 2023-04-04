@@ -1,15 +1,15 @@
 @students = [
-  {name: "Dr. Hannibal Lecter", cohort: :november, hobby: "crime"},
-  {name: "Darth Vader", cohort: :november, hobby: "crime"},
-  {name: "Nurse Ratched", cohort: :january, hobby: "crime"},
-  {name: "Michael Corleone", cohort: :november, hobby: "crime"},
-  {name: "Alex DeLarge", cohort: :march, hobby: "crime"},
-  {name: "The Wicked Witch of the West", cohort: :november, hobby: "crime"},
-  {name: "Terminator", cohort: :november, hobby: "crime"},
-  {name: "Freddy Krueger", cohort: :march, hobby: "crime"},
-  {name: "The Joker", cohort: :november, hobby: "crime"},
-  {name: "Joffrey Baratheon", cohort: :november, hobby: "crime"},
-  {name: "Norman Bates", cohort: :march, hobby: "crime"}
+  {name: "Dr. Hannibal Lecter", cohort: :november},
+  {name: "Darth Vader", cohort: :november},
+  {name: "Nurse Ratched", cohort: :january},
+  {name: "Michael Corleone", cohort: :november},
+  {name: "Alex DeLarge", cohort: :march},
+  {name: "The Wicked Witch of the West", cohort: :november},
+  {name: "Terminator", cohort: :november},
+  {name: "Freddy Krueger", cohort: :march},
+  {name: "The Joker", cohort: :november},
+  {name: "Joffrey Baratheon", cohort: :november},
+  {name: "Norman Bates", cohort: :march}
 ]
 
 def input_students
@@ -81,14 +81,6 @@ def print_by_cohort(cohort)
   
 end
 
-def print_students_list
-  
-  @students.each_with_index do |student, student_no|
-    puts "#{student_no + 1}. #{student[:name]} (Cohort: #{student[:cohort]}, Hobby: #{student[:hobby]})"
-  end
-  
-end
-
 def print_footer
   footer = "Overall, we have #{@students.count} great student"
   footer << "s" if @students.length > 1
@@ -104,6 +96,7 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
+  puts "3. Save the list to students.csv"
   puts "9. Exit"
 end
 
@@ -133,12 +126,22 @@ def print_starting_with(letter)
   
 end
 
+def print_students_list
+  
+  @students.each_with_index do |student, student_no|
+    puts "#{student_no + 1}. #{student[:name]} (Cohort: #{student[:cohort]})"
+  end
+  
+end
+
 def process(selection)
   case selection
     when "1"
       input_students
     when "2"
       show_students
+    when "3"
+      save_students
     when "9"
       exit
     else
@@ -146,9 +149,24 @@ def process(selection)
   end
 end
 
+def save_students
+  # open file for writing
+  file = File.open("students.csv", "w")
+  
+  #iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  
+  # close the file
+  file.close
+end
+
 def show_students
   print_header
-  print_each
+  print_students_list
   print_footer
 end
 
