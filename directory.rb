@@ -1,6 +1,20 @@
 require 'csv'
 
 @students = []
+@cohorts = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december"
+]
 
 def default_load
   
@@ -27,6 +41,11 @@ def input_students
     
     puts "Please enter the cohort you'd like to enroll this student in"
     cohort = STDIN.gets.chomp
+    
+    while !@cohorts.include?(cohort.downcase) do
+      puts "I cannot enter the student into cohort: #{cohort}, please enter a valid cohort"
+      cohort = STDIN.gets.chomp
+    end
     
     puts "Name: #{name}, Cohort: #{cohort}"
     puts "If you'd like to add this student to the list, type 'yes'"
