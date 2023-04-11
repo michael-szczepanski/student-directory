@@ -33,7 +33,7 @@ def input_students
     puts "If you'd like to add this student to the list, type 'yes'"
     answer = STDIN.gets.chomp
     if answer.downcase == "yes"
-      student = Hash.new('not specified')
+      student = Hash.new()
       student[:name] = name
       student[:cohort] = cohort
       @students << student
